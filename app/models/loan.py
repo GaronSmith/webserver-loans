@@ -5,7 +5,7 @@ class Loan(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Float, nullable = False)
-    interst_rate = db.Column(db.Float, nullable=False)
+    interest_rate = db.Column(db.Float, nullable=False)
     loan_length = db.Column(db.Integer, nullable=False)
     monthly_payment = db.Column(db.Float, nullable=False)
 
@@ -13,7 +13,7 @@ class Loan(db.Model):
         return{
             "id": self.id,
             "amount": self.amount,
-            "interst_rate": self.interst_rate,
+            "interest_rate": self.interst_rate,
             "loan_length": self.loan_length,
             "monthly_payment": self.monthly_payment,
         }

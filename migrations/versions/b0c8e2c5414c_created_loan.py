@@ -1,8 +1,8 @@
-"""created loan model
+"""created-loan
 
-Revision ID: 7f6c0fc2530c
+Revision ID: b0c8e2c5414c
 Revises: 
-Create Date: 2021-03-27 11:41:39.269436
+Create Date: 2021-03-27 17:02:03.012084
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7f6c0fc2530c'
+revision = 'b0c8e2c5414c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('loans',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('amount', sa.Float(), nullable=False),
-    sa.Column('interst_rate', sa.Float(), nullable=False),
+    sa.Column('interest_rate', sa.Float(), nullable=False),
     sa.Column('loan_length', sa.Integer(), nullable=False),
     sa.Column('monthly_payment', sa.Float(), nullable=False),
     sa.PrimaryKeyConstraint('id')
