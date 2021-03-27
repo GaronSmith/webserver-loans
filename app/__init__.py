@@ -10,6 +10,15 @@ app = Flask(__name__)
 
 app.config.from_object(Config)
 db.init_app(app)
+Migrate(app,db)
 
+#Security
 CORS(app)
 
+@app.before_request
+def https_redirect():
+    if os.environ.get('FLASK_ENV') == 'production':
+        if request.headers.get('X-Forwarded-Proto') == 'http':
+            url = request.url.replace('http://', 'https://', 1)
+            code = 301
+            return redirect(url, code=code)
