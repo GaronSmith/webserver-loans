@@ -13,7 +13,7 @@ class Loan(db.Model):
         return{
             "id": self.id,
             "amount": self.amount,
-            "interest_rate": self.interst_rate,
+            "interest_rate": self.interest_rate,
             "loan_length": self.loan_length,
             "monthly_payment": self.monthly_payment,
         }

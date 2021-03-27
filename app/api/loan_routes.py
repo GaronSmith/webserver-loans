@@ -29,4 +29,5 @@ def create_loan():
         )
         db.session.add(new_loan)
         db.session.commit()
-        return {"test":"test"}
+        return {"message": "Loan Created", 
+                "loan": new_loan.to_dict()}
