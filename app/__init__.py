@@ -5,10 +5,12 @@ from flask_migrate import Migrate
 
 from .config import Config
 from .models import db
+from .api.loan_routes import loan_routes
 
 app = Flask(__name__)
 
 app.config.from_object(Config)
+app.register_blueprint(loan_routes, url_prefix="/api/loans")
 db.init_app(app)
 Migrate(app,db)
 
