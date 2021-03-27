@@ -9,7 +9,10 @@ def loans(id):
     loan = Loan.query.filter(Loan.id == id).first()
     if request.method == "PUT":
         pass
-
+    elif request.method == "DELETE":
+        db.session.delete(loan)
+        db.session.commit()
+        return {"message": "Delete Successful."}
     return {loan.id: loan.to_dict()}
 
 
