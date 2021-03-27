@@ -11,9 +11,9 @@ class Loan(db.Model):
 
     def to_dict(self):
         return{
-            "id": self.id
-            "amount": self.amount
-            "interst_rate": self.interst_rate
-            "loan_length": self.loan_length
-            "monthly_payment": self.monthly_payment
+            "id": self.id,
+            "amount": self.amount,
+            "interst_rate": self.interst_rate,
+            "loan_length": self.loan_length,
+            "monthly_payment": self.monthly_payment,
         }
