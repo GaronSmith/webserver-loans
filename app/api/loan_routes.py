@@ -7,7 +7,7 @@ loan_routes = Blueprint("loan", __name__)
 @loan_routes.route("/<int:id>", methods=["GET", "PUT", "DELETE"])
 def loans(id):
     loan = Loan.query.get(id)
-    
+
     if loan:
         if request.method == "PUT":
             payload = json.loads(request.data)
@@ -22,7 +22,7 @@ def loans(id):
             db.session.delete(loan)
             db.session.commit()
             return {"message": "Delete Successful."}
-        return {loan.id: loan.to_dict()}
+        return loan.to_dict()
     else:
         return{"message": "Loan not found"}
 

@@ -14,7 +14,6 @@ app.register_blueprint(loan_routes, url_prefix="/api/loans")
 db.init_app(app)
 Migrate(app,db)
 
-#Security
 CORS(app)
 
 @app.before_request
