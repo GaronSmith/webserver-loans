@@ -16,7 +16,7 @@ def get_loan(id):
         if loan :
             return loan.to_dict(), 200
         else:
-            return make_error(400, "Loan not found")
+            
     except (ValueError):
         pass
 
@@ -34,32 +34,41 @@ def update_loan(id):
         return {"message": "Loan updated",
                 "loan": loan.to_dict()}, 200
     except (ValueError, KeyError, TypeError):
-        resp = Response({"JSON Format Error."}, status=400, mimetype='application/json')
-        return resp
+        return make_error(400, "JSON Format Error")
 
 
 @loan_routes.route("/<int:id>", methods=["DELETE"])
 def delete_loan(id):
     loan = Loan.query.get(id)
-    db.session.delete(loan)
-    db.session.commit()
-    return {"message": "Delete Successful."}, 200
+    if loan :
+        db.session.delete(loan)
+        db.session.commit()
+        return {"message": "Delete Successful."}, 200
+    else:
+        return make_error(400, "Loan not found")
+
 
 @loan_routes.route("/", methods=["GET"])
 def get_loans():
     loans = Loan.query.all()
-    return {loan.id: loan.to_dict() for loan in loans}, 200 
+    if loans:
+        return {loan.id: loan.to_dict() for loan in loans}, 200 
+    else:
+        return make_error(400, "Loans not found")
 
 @loan_routes.route("/", methods=[ "POST"])
 def create_loan():
-    payload = json.loads(request.data)
-    new_loan = Loan(
-                amount=payload["amount"],
-                interest_rate=payload["interest_rate"],
-                loan_length=payload["loan_length"],
-                monthly_payment=payload["monthly_payment"]
-                )
-    db.session.add(new_loan)
-    db.session.commit()
-    return {"message": "Loan Created",
-            "loan": new_loan.to_dict()}, 201
+    try:
+        payload = json.loads(request.data)
+        new_loan = Loan(
+                    amount=payload["amount"],
+                    interest_rate=payload["interest_rate"],
+                    loan_length=payload["loan_length"],
+                    monthly_payment=payload["monthly_payment"]
+                    )
+        db.session.add(new_loan)
+        db.session.commit()
+        return {"message": "Loan Created",
+                "loan": new_loan.to_dict()}, 201
+    except (ValueError, KeyError, TypeError):
+        return make_error(400, "JSON Format Error")
