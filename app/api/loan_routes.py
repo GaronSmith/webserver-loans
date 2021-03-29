@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 import json
 
 from app.models import Loan, db
-from app.utils.error_handling import make_error
+from app.utils.error_handling import make_error, check_types
 
 
 loan_routes = Blueprint("loan", __name__)
@@ -18,7 +18,7 @@ def get_loan(id):
         else:
             return make_error(400, "Loan Not Found")      
     except SQLAlchemyError as e:
-        return make_error(500, f'Internal Server Error: {type(e)} {repr(e)}')
+        return make_error(500, f'Internal Server Error: {repr(e)}')
 
 
 @loan_routes.route("/<int:id>", methods=["PUT"])
@@ -36,7 +36,7 @@ def update_loan(id):
     except (ValueError, KeyError, TypeError) as e:
         return make_error(400, f'JSON Format Error: {repr(e)}')
     except SQLAlchemyError as e:
-        return make_error(500, f'Internal Server Error: {type(e)} {repr(e)}')
+        return make_error(500, f'Internal Server Error: {repr(e)}')
 
 
 @loan_routes.route("/<int:id>", methods=["DELETE"])
@@ -50,7 +50,7 @@ def delete_loan(id):
         else:
             return make_error(400, "Loan not found")
     except SQLAlchemyError as e:
-        return make_error(500, f'Internal Server Error: {type(e)} {repr(e)}')
+        return make_error(500, f'Internal Server Error: {repr(e)}')
 
 
 @loan_routes.route("/", methods=["GET"])
@@ -62,12 +62,14 @@ def get_loans():
         else:
             return make_error(400, "Loans not found")
     except SQLAlchemyError as e:
-        return make_error(500, f'Internal Server Error: {type(e)} {repr(e)}')
+        return make_error(500, f'Internal Server Error: {repr(e)}'),
 
 @loan_routes.route("/", methods=[ "POST"])
 def create_loan():
     try:
         payload = json.loads(request.data)
+        error = check_types(payload)
+        if(error): return error
         new_loan = Loan(
                     amount=payload["amount"],
                     interest_rate=payload["interest_rate"],
@@ -81,4 +83,4 @@ def create_loan():
     except (ValueError, KeyError, TypeError) as e:
         return make_error(400, f'JSON Format Error: {repr(e)}')
     except SQLAlchemyError as e:
-        return make_error(500, f'Internal Server Error: {type(e)} {repr(e)}')
+        return make_error(500, f'Internal Server Error: {repr(e)}')
