@@ -17,8 +17,8 @@ def get_loan(id):
             return loan.to_dict(), 200
         else:
             
-    except (ValueError):
-        pass
+    except SQLAlchemyError as e:
+        return make_error(500, f`Internal Server Error: {type(e)}`)
 
 
 @loan_routes.route("/<int:id>", methods=["PUT"])
@@ -35,26 +35,34 @@ def update_loan(id):
                 "loan": loan.to_dict()}, 200
     except (ValueError, KeyError, TypeError):
         return make_error(400, "JSON Format Error")
+    except SQLAlchemyError as e:
+        return make_error(500, f`Internal Server Error: {type(e)}`)
 
 
 @loan_routes.route("/<int:id>", methods=["DELETE"])
 def delete_loan(id):
-    loan = Loan.query.get(id)
-    if loan :
-        db.session.delete(loan)
-        db.session.commit()
-        return {"message": "Delete Successful."}, 200
-    else:
-        return make_error(400, "Loan not found")
+    try:
+        loan = Loan.query.get(id)
+        if loan :
+            db.session.delete(loan)
+            db.session.commit()
+            return {"message": "Delete Successful."}, 200
+        else:
+            return make_error(400, "Loan not found")
+    except SQLAlchemyError as e:
+        return make_error(500, f`Internal Server Error: {type(e)}`)
 
 
 @loan_routes.route("/", methods=["GET"])
 def get_loans():
-    loans = Loan.query.all()
-    if loans:
-        return {loan.id: loan.to_dict() for loan in loans}, 200 
-    else:
-        return make_error(400, "Loans not found")
+    try:
+        loans = Loan.query.all()
+        if loans:
+            return {loan.id: loan.to_dict() for loan in loans}, 200 
+        else:
+            return make_error(400, "Loans not found")
+    except SQLAlchemyError as e:
+        return make_error(500, f`Internal Server Error: {type(e)}`)
 
 @loan_routes.route("/", methods=[ "POST"])
 def create_loan():
@@ -72,3 +80,5 @@ def create_loan():
                 "loan": new_loan.to_dict()}, 201
     except (ValueError, KeyError, TypeError):
         return make_error(400, "JSON Format Error")
+    except SQLAlchemyError as e:
+        return make_error(500, f`Internal Server Error: {type(e)}`)
