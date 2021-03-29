@@ -16,9 +16,9 @@ def get_loan(id):
         if loan :
             return loan.to_dict(), 200
         else:
-            
+            return make_error(400, "Loan Not Found")      
     except SQLAlchemyError as e:
-        return make_error(500, f`Internal Server Error: {type(e)}`)
+        return make_error(500, f'Internal Server Error: {type(e)}')
 
 
 @loan_routes.route("/<int:id>", methods=["PUT"])
@@ -33,10 +33,10 @@ def update_loan(id):
         db.session.commit()
         return {"message": "Loan updated",
                 "loan": loan.to_dict()}, 200
-    except (ValueError, KeyError, TypeError):
-        return make_error(400, "JSON Format Error")
+    except (ValueError, KeyError, TypeError) as e:
+        return make_error(400, f'JSON Format Error: {repr(e)}')
     except SQLAlchemyError as e:
-        return make_error(500, f`Internal Server Error: {type(e)}`)
+        return make_error(500, f'Internal Server Error: {type(e)}')
 
 
 @loan_routes.route("/<int:id>", methods=["DELETE"])
@@ -50,7 +50,7 @@ def delete_loan(id):
         else:
             return make_error(400, "Loan not found")
     except SQLAlchemyError as e:
-        return make_error(500, f`Internal Server Error: {type(e)}`)
+        return make_error(500, f'Internal Server Error: {type(e)}')
 
 
 @loan_routes.route("/", methods=["GET"])
@@ -62,7 +62,7 @@ def get_loans():
         else:
             return make_error(400, "Loans not found")
     except SQLAlchemyError as e:
-        return make_error(500, f`Internal Server Error: {type(e)}`)
+        return make_error(500, f'Internal Server Error: {type(e)}')
 
 @loan_routes.route("/", methods=[ "POST"])
 def create_loan():
@@ -72,13 +72,13 @@ def create_loan():
                     amount=payload["amount"],
                     interest_rate=payload["interest_rate"],
                     loan_length=payload["loan_length"],
-                    monthly_payment=payload["monthly_payment"]
+                    monthly_payment=payload["monthly_payment"],
                     )
         db.session.add(new_loan)
         db.session.commit()
         return {"message": "Loan Created",
                 "loan": new_loan.to_dict()}, 201
-    except (ValueError, KeyError, TypeError):
-        return make_error(400, "JSON Format Error")
+    except (ValueError, KeyError, TypeError) as e:
+        return make_error(400, f'JSON Format Error: {repr(e)}')
     except SQLAlchemyError as e:
-        return make_error(500, f`Internal Server Error: {type(e)}`)
+        return make_error(500, f'Internal Server Error: {type(e)}')
