@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from .config import Config
 from .models import db
 from .api.loan_routes import loan_routes
+from .utils.error_handling import make_error
 
 app = Flask(__name__)
 
@@ -24,5 +25,7 @@ def https_redirect():
             code = 301
             return redirect(url, code=code)
 
-
+@app.errorhandler(404)
+def resource_not_found(e):
+    return make_error(404, "Resource not found")
 
