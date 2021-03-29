@@ -27,5 +27,5 @@ def https_redirect():
 
 @app.errorhandler(404)
 def resource_not_found(e):
-    return make_error(404, "resource not found")
+    return make_error(404, "Resource not found")
 
