@@ -36,8 +36,10 @@ def update_loan(id):
         return {"message": "Loan updated",
                 "loan": loan.to_dict()}, 200
     except (ValueError, KeyError, TypeError) as e:
+        db.session.rollback()
         return make_error(400, f'JSON Format Error: {repr(e)}')
     except SQLAlchemyError as e:
+        db.session.rollback()
         return make_error(500, f'Internal Server Error: {repr(e)}')
 
 
@@ -50,8 +52,10 @@ def delete_loan(id):
             db.session.commit()
             return {"message": "Delete Successful."}, 200
         else:
+            db.session.rollback()
             return make_error(400, "Loan not found")
     except SQLAlchemyError as e:
+        db.session.rollback()
         return make_error(500, f'Internal Server Error: {repr(e)}')
 
 
@@ -83,6 +87,8 @@ def create_loan():
         return {"message": "Loan Created",
                 "loan": new_loan.to_dict()}, 201
     except (ValueError, KeyError, TypeError) as e:
+        db.session.rollback()
         return make_error(400, f'JSON Format Error: {repr(e)}')
     except SQLAlchemyError as e:
+        db.session.rollback()
         return make_error(500, f'Internal Server Error: {repr(e)}')
